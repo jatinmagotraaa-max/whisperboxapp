@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* 1. Midnight (default) */
+  :root {
+    --background: 2 6 23;      /* #020617 */ 
+    --surface: 10 15 28;       /* #0A0F1C */
+    --primary: 226 232 240;    /* slate-200 */
+    --accent: 212 175 55;      /* Gold accent for default premium feel */
+    --dimmed: 100 116 139;     /* slate-500 */
+    --noise-opacity: 0.05;
+  }
+
+  /* 2. Vampire */
+  body[data-mood="vampire"] {
+    --background: 15 0 0;
+    --surface: 30 2 2;
+    --primary: 255 200 200;
+    --accent: 139 0 0;       /* Deep red #8B0000 */
+    --dimmed: 153 27 27;
+    --noise-opacity: 0.08;
+    animation: vampirePulse 6s ease-in-out infinite alternate;
+  }
+
+  /* 3. Love */
+  body[data-mood="love"] {
+    --background: 253 224 233; /* Soft warm pink */
+    --surface: 255 240 245;    /* Lavender blush */
+    --primary: 136 19 55;      /* Deep rose text */
+    --accent: 244 63 94;       /* Rose 500 */
+    --dimmed: 251 113 133;
+    --noise-opacity: 0.02;     /* Very clean */
+  }
+
+  /* 5. Christmas */
+  body[data-mood="christmas"] {
+    --background: 6 24 16;     /* Deep forest green */
+    --surface: 10 35 25;
+    --primary: 248 250 252;
+    --accent: 220 38 38;       /* Festive red */
+    --dimmed: 148 163 184;
+    --noise-opacity: 0.05;
+  }
+
+  /* 6. Sakura */
+  body[data-mood="sakura"] {
+    --background: 255 245 248; /* Very pale pastel pink */
+    --surface: 255 250 252;
+    --primary: 80 50 60;       /* Soft dark mauve for text */
+    --accent: 244 114 182;     /* Soft pink */
+    --dimmed: 219 164 189;
+    --noise-opacity: 0.01;
+  }
+
+  body {
+    background: linear-gradient(180deg, rgb(var(--background)) 0%, rgb(var(--background)) 40%, rgb(var(--surface)) 100%);
+    background-attachment: fixed;
+    color: rgb(var(--primary));
+    @apply antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    transition: background 1s ease-in-out, color 0.5s ease-in-out;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: var(--noise-opacity);
+    z-index: 999;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-[12px] border transition-colors duration-700;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: rgba(var(--primary) / 0.06);
+  }
+  
+  /* Invert glass for light modes (Love, Sakura) */
+  body[data-mood="love"] .glass-panel,
+  body[data-mood="sakura"] .glass-panel {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(var(--primary) / 0.1);
+    box-shadow: 0 8px 32px rgba(136, 19, 55, 0.05);
+  }
+
+  /* Vampire glowing edges */
+  body[data-mood="vampire"] .glass-panel {
+    box-shadow: 0 0 25px rgba(139, 0, 0, 0.3);
+    border-color: rgba(139, 0, 0, 0.4);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(var(--accent) / 0.3);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%       { transform: translateX(-6px); }
+  30%       { transform: translateX(6px); }
+  45%       { transform: translateX(-4px); }
+  60%       { transform: translateX(4px); }
+  75%       { transform: translateX(-2px); }
+  90%       { transform: translateX(2px); }
+}
+
+.animate-shake {
+  animation: shake 0.55s ease;
+}
+
+@keyframes vampirePulse {
+  0% { box-shadow: inset 0 0 0px rgba(139,0,0,0); }
+  50% { box-shadow: inset 0 0 100px rgba(139,0,0,0.1); }
+  100% { box-shadow: inset 0 0 50px rgba(139,0,0,0.05); }
+}
